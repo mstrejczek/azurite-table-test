@@ -67,3 +67,25 @@ Trying to retrieve an entity that does not exist...
 Storage exception caught, HTTP status code=409
 ```
 
+## Reproducing https://github.com/Azure/Azurite/issues/688
+2. Make sure code between `// START - UNCOMMENT TO REPRODUCE https://github.com/Azure/Azurite/issues/686` and `// END` is commented out.
+3. Make sure code between `// START - UNCOMMENT TO REPRODUCE https://github.com/Azure/Azurite/issues/687` and `// END` is commented out.
+4. Make sure code between `// START - UNCOMMENT TO REPRODUCE https://github.com/Azure/Azurite/issues/688` and `// END` is uncommented.
+5. Start the application (`./gradlew run`)
+
+Expected behaviour:
+* Entity is inserted into table, this text is printed to stdout - note that HTTP Status code should be 404 (Not Found)
+```
+Trying to create table foo if not exists...
+Was table created? yes
+TableResult httpStatus=204
+```
+
+Actual behaviour:
+* Entity is inserted into table but this text is printed to stdout - detailed cause message may vary as it is datetime-dependent.
+```
+Trying to create table foo if not exists...
+Was table created? yes
+Trying to insert an entity...
+StorageException caught, cause message=Invalid Date String: D7B0076
+```

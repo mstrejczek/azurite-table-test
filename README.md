@@ -4,7 +4,10 @@ This application shows that Azurite 3.9.0-table-alpha.1 does not work well with 
 
 # How to run?
 1. Start Azurite (tried with NPM)
-2. Start the application (`./gradlew run`)
+   
+## Reproducing https://github.com/Azure/Azurite/issues/686
+2. Make sure code between `// START - UNCOMMENT TO REPRODUCE https://github.com/Azure/Azurite/issues/686` and `// END` is uncommented.
+3. Start the application (`./gradlew run`)
 
 Expected behaviour:
 * This text is printed to stdout:
@@ -40,5 +43,27 @@ Caused by: java.lang.NullPointerException
         at com.microsoft.azure.storage.table.QueryTableOperation$1.postProcessResponse(QueryTableOperation.java:193)
         at com.microsoft.azure.storage.core.ExecutionEngine.executeWithRetry(ExecutionEngine.java:166)
         ... 6 more
+```
+
+## Reproducing https://github.com/Azure/Azurite/issues/687
+2. Make sure code between `// START - UNCOMMENT TO REPRODUCE https://github.com/Azure/Azurite/issues/686` and `// END` is commented out.
+3. Make sure code between `// START - UNCOMMENT TO REPRODUCE https://github.com/Azure/Azurite/issues/687` and `// END` is uncommented.
+4. Start the application (`./gradlew run`)
+
+Expected behaviour:
+* This text is printed to stdout - note that HTTP Status code should be 404 (Not Found)
+```
+Trying to create table foo if not exists...
+Was table created? yes
+TableResult httpStatus=404
+```
+
+Actual behaviour:
+* This text is printed to stdout - note that HTTP Status code is 409 (Conflict), which does not seem right. Also StorageException stacktrace is printed to stderr.
+```
+Trying to create table foo if not exists...
+Was table created? yes
+Trying to retrieve an entity that does not exist...
+Storage exception caught, HTTP status code=409
 ```
 
